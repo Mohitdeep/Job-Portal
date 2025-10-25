@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["student", "reqruiter"],
+      enum: ["student", "recruiter"],
     },
     profile: {
       bio: { type: String },

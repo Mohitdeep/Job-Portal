@@ -4,7 +4,10 @@ import { Label } from "../ui/label";
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "../../utils/constant";
+import { toast } from "sonner";
 
 const Login = () => {
 
@@ -13,6 +16,8 @@ const Login = () => {
         password: "",
         role: "",
     });
+
+    const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
         setInput({
@@ -24,6 +29,24 @@ const Login = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         console.log(input);
+        const body = {
+            email: input.email,
+            password: input.password,
+            role: input.role
+        }
+        try {
+            const res = await axios.post(`${USER_API_ENDPOINT}/login`, body);
+            if (res.data.success) {
+                navigate("/")
+                toast.success(res.data.message);
+            }
+            else {
+                toast.error(res?.data?.message || "Unable to login");
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error(e.response?.data?.message || "Something went wrong");
+        }
     };
 
     return (
